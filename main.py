@@ -72,7 +72,7 @@ class graphicFile:
         
         df= pd.read_csv(self.buscado)
         arrayPeso = np.array(df['Peso_Kg'].sort_values())
-        arrayHoras_Ejercicio = np.array(df['Horas_de_Ejercicio'].sort_values())
+        arrayHoras_Ejercicio = np.array(df['Dias_de_Ejercicio'].sort_values())
         arrayIMC = np.array(df['IMC'].sort_values())
         calculos.createQualitativeData(arrayIMC)
         calculos.createClass(arrayPeso)
@@ -87,7 +87,7 @@ class graphicFile:
         plt.plot( DFgeneral['Marca de clase'],DFgeneral['Frec Absoluta'])
         plt.show()
         
-        df.groupby ("Edad") ["Horas_de_Ejercicio"].mean().plot(kind='bar',legend='Reverse')
+        df.groupby ("Edad") ["Dias_de_Ejercicio"].mean().plot(kind='bar',legend='Reverse')
         plt.show()
 
         DF_Estatus.Cantidad.groupby(DF_Estatus.Estatus).sum().plot(kind='pie' , cmap= 'Paired', autopct='%1.1f%%')  
@@ -121,10 +121,15 @@ class Calculos:
 
         self.rangoMayor = df['Peso_Kg'].max()
         self.rangoMenor = df['Peso_Kg'].min()
+        print(self.rangoMenor)
+        print(self.rangoMayor)
         self.rango = self.rangoMayor - self.rangoMenor
-        self.numClass = int(1 + (3.3 * math.log10(len(array))))
+        self.numClass = math.ceil(1 + (3.3 * math.log10(len(array))))
+        print( len(array))
+        print(self.numClass)
         self.widthClass = (round(self.rango / self.numClass))
         limiteMenor = self.rangoMenor
+        print(self.widthClass)
 
         for i in range(self.numClass):
 
