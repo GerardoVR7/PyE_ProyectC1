@@ -25,21 +25,21 @@ def ventana2():
         table1 = Text(window2)
         table1.insert(INSERT,DFgeneral.to_string())
         table1.pack()
-        table1.place(x=5, y=130,height=155, width=670)
+        table1.place(x=30, y=140,height=195, width=650)
 
     def mostrarDatosDiscretos():
         calculos.createDataDiscreet(arrayHoras_Ejercicio)
         table1 = Text(window2)
         table1.insert(INSERT,DF_Discretos.to_string())
         table1.pack()
-        table1.place(x=5, y=350,height=150, width=400)
+        table1.place(x=30, y=350,height=140, width=300)
 
     def mostrarDatosCualitativos():
         table1 = Text(window2)
         table1.insert(INSERT,DF_Estatus.to_string())
         print(DF_Estatus)
         table1.pack()
-        table1.place(x=5, y=500,height=100, width=500)
+        table1.place(x=30, y=500,height=100, width=300)
     
     Button(window2, text="Generar graficas", command= archivo.generateGraficPie). pack(side=TOP)
     Button(window2, text="Mostrar tabla de datos continuos", command= lambda: mostrarDatosContinuos() ).pack(side=TOP)
@@ -81,10 +81,14 @@ class graphicFile:
 
     def generateGraficPie(self):
         
-        plt.hist(x=DFgeneral['Frec Absoluta'], bins=DFgeneral['Marca de clase'])
+        plt.plot(DFgeneral['Marca de clase'], DFgeneral['Frec Absoluta'])
+        plt.title('titulo vacio')
+        plt.xlabel('Marca de clase')
+        plt.ylabel('Frecuencia')
         plt.show()
         
         df.groupby ("Edad") ["Dias_de_Ejercicio"].mean().plot(kind='bar',legend='Reverse')
+        plt.ylabel('Dias de ejercicio')
         plt.show()
 
         DF_Estatus.Cantidad.groupby(DF_Estatus.Estatus).sum().plot(kind='pie' , cmap= 'Paired', autopct='%1.1f%%')  
@@ -101,6 +105,7 @@ class Calculos:
     classMark = 0
     frecAbs = 1
     freRel = 0
+    auxMayor = 0
 
     list_numClass = []
     list_limtMayor = []
@@ -128,9 +133,17 @@ class Calculos:
         limiteMenor = self.rangoMenor
         print(self.widthClass)
 
+        self.list_limtMenor.append("")
+        self.list_limtMayor.append("")
+        self.list_classMark.append(limiteMenor)
+        self.list_frecAbs.append(0)
+        self.list_freRel.append(0)
+
+
         for i in range(self.numClass):
 
             limiteMayor = limiteMenor + self.widthClass
+            self.auxMayor = limiteMayor
             self.list_limtMenor.append(limiteMenor)
             self.list_limtMayor.append(limiteMayor)
             marca = 0.0
@@ -150,6 +163,8 @@ class Calculos:
             self.freRel = 0 
 
             limiteMenor = limiteMayor
+        self.list_classMark.append(self.auxMayor)
+        self.list_frecAbs.append(0)
 
         Lim_Menor=pd.DataFrame(self.list_limtMenor,columns=['Lim Menor'])
         Lim_Mayor=pd.DataFrame(self.list_limtMayor,columns=['Lim Mayor'])
