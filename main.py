@@ -35,14 +35,13 @@ def ventana2():
         table1.place(x=5, y=350,height=150, width=400)
 
     def mostrarDatosCualitativos():
-        calculos.createQualitativeData(arrayIMC)
         table1 = Text(window2)
         table1.insert(INSERT,DF_Estatus.to_string())
         print(DF_Estatus)
         table1.pack()
         table1.place(x=5, y=500,height=100, width=500)
     
-    Button(window2, text="Generar grafica de barras", command= archivo.generateGraficPie). pack(side=TOP)
+    Button(window2, text="Generar graficas", command= archivo.generateGraficPie). pack(side=TOP)
     Button(window2, text="Mostrar tabla de datos continuos", command= lambda: mostrarDatosContinuos() ).pack(side=TOP)
     Button(window2, text="Mostrar tabla de datos discretos", command= lambda: mostrarDatosDiscretos() ).pack(side=TOP)
     Button(window2, text="Mostrar tabla de datos cualitativos", command= lambda: mostrarDatosCualitativos() ).pack(side=TOP)
@@ -81,10 +80,8 @@ class graphicFile:
 
 
     def generateGraficPie(self):
-
-
         
-        plt.plot( DFgeneral['Marca de clase'],DFgeneral['Frec Absoluta'])
+        plt.hist(x=DFgeneral['Frec Absoluta'], bins=DFgeneral['Marca de clase'])
         plt.show()
         
         df.groupby ("Edad") ["Dias_de_Ejercicio"].mean().plot(kind='bar',legend='Reverse')
@@ -102,7 +99,7 @@ class Calculos:
     numClass = 0.0
     widthClass = 0
     classMark = 0
-    frecAbs = 0
+    frecAbs = 1
     freRel = 0
 
     list_numClass = []
@@ -142,7 +139,7 @@ class Calculos:
             for y in range(len(array)):
                 arraytotal = array[y]
                 #self.frecAbs = df.loc[(df.Peso_Kg >= limiteMenor) & (df.Peso_Kg <= limiteMayor)  ].agg(frecuency= ("Peso_Kg" , "count"))
-                if (arraytotal >= limiteMenor and arraytotal <= limiteMayor): 
+                if (arraytotal > limiteMenor and arraytotal <= limiteMayor): 
                     self.frecAbs = self.frecAbs + 1
                     self.freRel = (self.frecAbs * 100) /len(array)
 
@@ -151,6 +148,7 @@ class Calculos:
             self.list_freRel.append(round(self.freRel,2))
             self.frecAbs = 0
             self.freRel = 0 
+
             limiteMenor = limiteMayor
 
         Lim_Menor=pd.DataFrame(self.list_limtMenor,columns=['Lim Menor'])
@@ -167,9 +165,6 @@ class Calculos:
     list_datosDiscretos = []
 
     def createDataDiscreet(self,array):
-
-        
-
         sesgo = ""
         #statistics
         #print('Media geometrica:' ,st.geometric_mean(array))
@@ -187,7 +182,6 @@ class Calculos:
         print('Mediana:' ,st.median(array))
         mediana =st.median(array)
         self.list_datosDiscretos.append(mediana)
-
         print('Moda:' , st.mode(array))
         moda = st.mode(array)
         self.list_datosDiscretos.append(moda)
@@ -200,7 +194,6 @@ class Calculos:
 
         encabezados = pd.DataFrame(self.lis_encabezados, columns=['Calculos'])
         datosD = pd.DataFrame(self.list_datosDiscretos, columns=['Datos'])
-
         
         global DF_Discretos
         DF_Discretos = None
@@ -213,14 +206,14 @@ class Calculos:
             sesgo = "Sesgado simetrico"
         elif(moda < mediana < media_aritmetica):
             sesgo = "Sesgado a la derecha"
-
-        
-        
         print("Sesgo:" , sesgo)
 
     limBP = 18.5
+    #medida de bajo peso en el rango del IMC
     limPN = 24.9
+    #medida de peso normal en el rango del IMC
     limSP = 29.9
+    #medida de sobre peso en el rango del IMC
     list_estatus = ["Anemia", "Peso normal", "Sobrepeso", "Obesidad"]
     list_cantidad = []
 
