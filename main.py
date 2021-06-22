@@ -82,12 +82,13 @@ class graphicFile:
     def generateGraficPie(self):
         
         plt.plot(DFgeneral['Marca de clase'], DFgeneral['Frec Absoluta'])
-        plt.title('titulo vacio')
+        plt.title('Grafica de poligono')
         plt.xlabel('Marca de clase')
         plt.ylabel('Frecuencia')
         plt.show()
         
-        df.groupby ("Edad") ["Dias_de_Ejercicio"].mean().plot(kind='bar',legend='Reverse')
+        df.groupby ("Edad") ["Dias_de_Ejercicio"].mean().plot(kind='bar',legend='Reverse' )
+        plt.title('Grafica de barras')
         plt.ylabel('Dias de ejercicio')
         plt.show()
 
